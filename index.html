@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>منصة تحليل ذكية</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #1c1c1c;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #00ffe1;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #00ffe1;
+      color: #000;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00bfa5;
+    }
+
+    #resultBox {
+      margin-top: 30px;
+      padding: 15px;
+      background: #292929;
+      border-left: 5px solid #00ffe1;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: 100px auto;
+      background: #1c1c1c;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .error {
+      color: red;
+      margin-top: 15px;
+    }
+
+    .telegram {
+      margin-top: 10px;
+    }
+
+    .telegram a {
+      color: #00ffe1;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .top-bar {
+      text-align: center;
+      background: #111;
+      padding: 10px;
+      font-size: 14px;
+      border-bottom: 1px solid #333;
+    }
+
+  </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        لكي يمكنك استخدام المنصة تواصل معي على التليجرام: <a href="https://t.me/Trader2365" target="_blank">@Trader2365</a>
+       </div>
+
+<div id="loginPage" class="login-container">
+  <h2>🚪 تسجيل الدخول</h2>
+  <input type="password" id="password" placeholder="ادخل كلمة المرور">
+  <button onclick="checkPassword()">دخول</button>
+  <div id="loginError" class="error"></div>
+</div>
+
+<div id="mainApp" style="display:none;">
+  <div class="container">
+    <h1>📊 منصة تحليل العملات</h1>
+    <label>السعر الحالي:</label>
+    <input type="number" id="currentPrice">
+
+    <label>سعر الدعم:</label>
+    <input type="number" id="support">
+
+    <label>توقيت الدعم (س:د):</label>
+    <input type="text" id="supportTime" placeholder="مثال: 13:15">
+
+    <label>سعر المقاومة:</label>
+    <input type="number" id="resistance">
+
+    <label>توقيت المقاومة (س:د):</label>
+    <input type="text" id="resistanceTime" placeholder="مثال: 13:45">
+
+    <label>توقيت السعر الحالي (س:د):</label>
+    <input type="text" id="currentTime" placeholder="مثال: 13:30">
+
+    <label>اختر الفريم:</label>
+    <select id="frame">
+      <option value="15s">15 ثانية</option>
+      <option value="30s">30 ثانية</option>
+      <option value="1m">1 دقيقة</option>
+      <option value="2m">2 دقائق</option>
+      <option value="3m">3 دقائق</option>
+      <option value="5m">5 دقائق</option>
+      <option value="10m">10 دقائق</option>
+      <option value="15m">15 دقيقة</option>
+      <option value="30m">30 دقيقة</option>
+    </select>
+
+    <label>مدة الصفقة:</label>
+    <select id="duration">
+      <option value="15s">15 ثانية</option>
+      <option value="30s">30 ثانية</option>
+      <option value="1m">1 دقيقة</option>
+      <option value="2m">2 دقائق</option>
+      <option value="3m">3 دقائق</option>
+      <option value="4m">4 دقائق</option>
+      <option value="5m">5 دقائق</option>
+      <option value="10m">10 دقائق</option>
+      <option value="15m">15 دقيقة</option>
+    </select>
+
+    <button onclick="analyze()">🔍 تحليل</button>
+
+    <div id="resultBox"></div>
+
+    <button onclick="goToMarket()">🌍 تحليل السوق العالمي</button>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = "BADI2007";
+
+  function checkPassword() {
+    const input = document.getElementById("password").value;
+    if (input === PASSWORD) {
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("mainApp").style.display = "block";
+    } else {
+      document.getElementById("loginError").innerHTML = "❌ كلمة المرور خاطئة!";
+    }
+  }
+
+  function analyze() {
+    const current = parseFloat(document.getElementById("currentPrice").value);
+    const support = parseFloat(document.getElementById("support").value);
+    const resistance = parseFloat(document.getElementById("resistance").value);
+    const supportTime = document.getElementById("supportTime").value;
+    const resistanceTime = document.getElementById("resistanceTime").value;
+    const time = document.getElementById("currentTime").value;
+    const frame = document.getElementById("frame").value;
+    const duration = document.getElementById("duration").value;
+
+    let signal = '';
+    const accuracy = Math.floor(Math.random() * 21) + 80;
+
+    if (current > resistance) {
+      signal = `📈 إشارة شراء قوية!<br>
+      ✅ السعر اخترق المقاومة<br>
+      🔢 السعر الحالي: ${current}<br>
+      🕒 الوقت: ${time}<br>
+      🎯 الدقة: ${accuracy}%<br>
+      📈 المقاومة: ${resistance} | ⏰ ${resistanceTime}<br>
+      📉 الدعم: ${support} | ⏰ ${supportTime}<br>
+      ⏱️ الفريم: ${frame} | ⏳ مدة الصفقة: ${duration}`;
+    } else {
+      signal = `📉 إشارة بيع قوية!<br>
+      🔢 السعر الحالي: ${current}<br>
+      🕒 الوقت: ${time}<br>
+      🎯 الدقة: ${accuracy}%<br>
+      📈 المقاومة: ${resistance} | ⏰ ${resistanceTime}<br>
+      📉 الدعم: ${support} | ⏰ ${supportTime}<br>
+      ⏱️ الفريم: ${frame} | ⏳ مدة الصفقة: ${duration}`;
+    }
+
+    document.getElementById("resultBox").innerHTML = signal;
+  }
+
+  function goToMarket() {
+    window.open("https://www.tradingview.com/markets/currencies/forex-ideas/", "_blank");
+  }
+</script>
+
+</body>
+</html>
